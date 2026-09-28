@@ -1,0 +1,15 @@
+vn\iotstar\repository\UserRepository.class
+vn\iotstar\dto\LoginDTO.class
+vn\iotstar\security\CustomUserDetailsService.class
+vn\iotstar\config\EncodingConfig.class
+vn\iotstar\dto\UserDTO.class
+vn\iotstar\config\SecurityConfig.class
+vn\iotstar\controller\AuthController.class
+vn\iotstar\config\DataInitializer.class
+vn\iotstar\controller\HomeController.class
+vn\iotstar\entity\User.class
+vn\iotstar\mapper\UserMapperImpl.class
+vn\iotstar\Bt09Vd1Application.class
+vn\iotstar\mapper\UserMapper.class
+vn\iotstar\repository\RoleRepository.class
+vn\iotstar\entity\Role.class
