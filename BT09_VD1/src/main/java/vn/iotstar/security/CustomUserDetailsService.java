@@ -9,18 +9,26 @@ import vn.iotstar.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepository users;
+    private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository users) { this.users = users; }
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User u = users.findByEmailWithRole(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy tài khoản."));
-        return org.springframework.security.core.userdetails.User.withUsername(u.getEmail())
-                .password(u.getPassword())
-                .roles(u.getRole().getName())
-                .disabled(!u.isEnabled())
-                .build();
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        User user = userRepository.findByUsernameOrEmail(login, login)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy username/email: " + login));
+        
+        return new CustomUserDetails(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getFullName(),
+                user.getImages(),
+                user.getRole().getName(),
+                user.isEnabled()
+        );
     }
 }

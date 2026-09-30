@@ -1,6 +1,5 @@
 package vn.iotstar.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,21 +12,20 @@ import vn.iotstar.repository.UserRepository;
 @Configuration
 public class DataInitializer {
     @Bean
-    public CommandLineRunner initData(RoleRepository roles, UserRepository users, PasswordEncoder encoder,
-                                      @Value("${ADMIN_EMAIL:admin@gmail.com}") String adminEmail,
-                                      @Value("${ADMIN_PASSWORD:123456}") String adminPassword) {
+    CommandLineRunner init(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            Role userRole = roles.findByNameIgnoreCase("USER").orElseGet(() -> roles.save(new Role("USER")));
-            Role adminRole = roles.findByNameIgnoreCase("ADMIN").orElseGet(() -> roles.save(new Role("ADMIN")));
+            Role userRole = roleRepository.findByName("ROLE_USER").orElseGet(() -> roleRepository.save(new Role("ROLE_USER")));
 
-            if (!users.existsByEmailIgnoreCase(adminEmail)) {
-                User admin = new User();
-                admin.setEmail(adminEmail.toLowerCase());
-                admin.setFullName("System Administrator");
-                admin.setPassword(encoder.encode(adminPassword));
-                admin.setRole(adminRole);
-                admin.setEnabled(true);
-                users.save(admin);
+            if (userRepository.findByUsername("user01").isEmpty()) {
+                User user = new User();
+                user.setUsername("user01");
+                user.setEmail("user01@gmail.com");
+                user.setPassword(passwordEncoder.encode("123456"));
+                user.setFullName("Nguyễn Hữu Trung");
+                user.setImages("/images/user.png");
+                user.setRole(userRole);
+                user.setEnabled(true);
+                userRepository.save(user);
             }
         };
     }
